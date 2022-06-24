@@ -29,7 +29,7 @@ Profit???
 ## Contents
 
 - [Provision an Equinix Metal instance with Custom iPXE](#provision-an-equinix-metal-instance-with-custom-ipxe)
-- [Switch the instance to Rescue Mode](#switch-the-instance-to-rescue-mode)
+- [Log in to the instance](#log-in-to-the-instance)
 - [Run the ISO installation environment setup script](#run-the-iso-installation-environment-setup-script)
 - [Access the ISO installation environment](#access-the-iso-installation-environment)
 - [Download the ISO](#download-the-iso)
@@ -94,12 +94,18 @@ Copy the command and run it on your local machine so that you can connect to the
 
 ![out-of-band-console](/images/out-of-band-console.png)
 
+Once you are logged in to the shell as the `ubuntu` user, type the following and press enter to switch to the `root` user:
+
+```
+sudo su
+```
+
 ### Run the ISO installation environment setup script
 
 We need to install several packages to make the Rescue Mode environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
 
 ```
-sudo su ; sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
+sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y curl ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
 ```
 
 The script should only take less than a minute to complete depending on the speed of the system and package downloads. If it completed successfully, you should see the following webserver output:
