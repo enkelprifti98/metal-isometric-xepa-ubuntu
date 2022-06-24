@@ -56,15 +56,25 @@ Select the metro location that you will be deploying in, then select the server 
 
 ![metro-server-selection](/images/metro-server-selection.png)
 
-Under the Operating Systems section, choose `Custom iPXE`. For the iPXE Script URL field you can provide anything as we won't actually be using it. In my case I'm passing the following URL:
-
-```
-http://boot.netboot.xyz
-```
+Under the Operating Systems section, choose `Custom iPXE`. For the iPXE Script URL field, leave it empty as we will pass the iPXE script through User Data.
 
 ![custom-ipxe-selection](/images/custom-ipxe-selection.png)
 
-At the Optional Settings section, there will be an option to configure IPs. If you leave the toggle unchecked, the instance will be deployed with a /31 public IPv4 subnet, /31 private IPv4 subnet, and a /127 public IPv6 subnet.
+At the Optional Settings section, there will be an option to add User Data. Enable the toggle and paste the following iPXE script in the User Data field.
+
+```
+#!ipxe
+dhcp
+imgfree
+set base_url https://github.com/netbootxyz/ubuntu-squash/releases/download/22.04-0eccaa7c/
+kernel ${base_url}vmlinuz initrd=initrd ip=dhcp boot=casper netboot=url url=${base_url}filesystem.squashfs intel_iommu=on iommu=pt pci=realloc console=ttyS1,115200n8
+initrd ${base_url}initrd
+boot
+```
+
+![ipxe-script-user-data](/images/ipxe-script-user-data.png)
+
+There will also be an option to configure IPs. If you leave the toggle unchecked, the instance will be deployed with a /31 public IPv4 subnet, /31 private IPv4 subnet, and a /127 public IPv6 subnet.
 
 **For many operating systems a /31 subnet size will work fine but there are cases where a /30 subnet is required at minimum such as for Microsoft Windows or VMware ESXi. If that is the case, you will need to [request a /30 Elastic IP subnet](https://metal.equinix.com/developers/docs/networking/reserve-public-ipv4s/#requesting-public-ipv4-addresses) and then use that subnet as the [instance management subnet](https://metal.equinix.com/developers/docs/networking/reserve-public-ipv4s/#provisioning-with-a-reserved-public-ipv4-subnet).**
 
@@ -74,26 +84,22 @@ For this guide I will be installing Windows 10 so I will be using a /30 Elastic 
 
 Confirm your settings and click the `Deploy Now` button to start provisioning your server.
 
-### Switch the instance to Rescue Mode
+### Log in to the instance
 
-Once the Equinix Metal instance has completed provisioning, click on it so that you can view the server's overview page. On this page you will be able to see additional information such as the management subnets. We need to switch the instance to [Rescue Mode](https://metal.equinix.com/developers/docs/resilience-recovery/rescue-mode/) which you can do by clicking the `Server Actions` button on the top right, then select the `Rescue OS` option.
+Once the Equinix Metal instance has completed provisioning, click on it so that you can view the server's overview page. On this page you will be able to see additional information such as the management subnets. We need to log in to the [Out-of-Band console](https://metal.equinix.com/developers/docs/resilience-recovery/serial-over-ssh/#using-sos) via SSH. You can get the Out-of-Band console SSH command through the button on the top of the instance overview page.
 
-![switch-to-rescue-mode](/images/switch-to-rescue-mode.png)
+![out-of-band-console-button](/images/out-of-band-console-button.png)
 
-You will notice that the Operating System now says `Alpine 3` as that is the Rescue OS. This will be temporary and will change back to `Custom iPXE` after getting out of the Rescue Mode.
+Copy the command and run it on your local machine so that you can connect to the instance. Note that it is required to have a [public SSH key](https://metal.equinix.com/developers/docs/accounts/ssh-keys/) added to your Equinix Metal account to be able to log in to the Out-of-Band console. Once you have logged in to the console, you should get a user login prompt similar to the following image. Type `ubuntu` and press `Enter` to log in to the shell.
 
-While the instance is transitioning to Rescue Mode, you can monitor the node through the [Out-of-Band console](https://metal.equinix.com/developers/docs/resilience-recovery/serial-over-ssh/#using-sos) if you wish.
-
-To access the Rescue Mode environment, you can either use the Out-of-Band console or [SSH](https://metal.equinix.com/developers/docs/accounts/ssh-keys/#connecting-with-ssh) into it through the management IP address. The Rescue Mode environment should look like the following:
-
-![rescue-mode](/images/rescue-mode.png)
+![out-of-band-console](/images/out-of-band-console.png)
 
 ### Run the ISO installation environment setup script
 
 We need to install several packages to make the Rescue Mode environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
 
 ```
-curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
+sudo su ; sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
 ```
 
 The script should only take less than a minute to complete depending on the speed of the system and package downloads. If it completed successfully, you should see the following webserver output:
