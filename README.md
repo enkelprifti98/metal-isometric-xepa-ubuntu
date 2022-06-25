@@ -32,7 +32,9 @@ Profit???
 - [Log in to the instance](#log-in-to-the-instance)
 - [Run the ISO installation environment setup script](#run-the-iso-installation-environment-setup-script)
 - [Access the ISO installation environment](#access-the-iso-installation-environment)
-- [Download the ISO](#download-the-iso)
+- [Get the ISO](#get-the-iso)
+  - [Download the ISO](#download-the-iso)
+  - [Upload the ISO](#upload-the-iso)
 - [Create the ISO installation Virtual Machine](#create-the-iso-installation-virtual-machine)
 - [Add serial consoles to the Virtual Machine](#add-serial-consoles-to-the-virtual-machine)
 - [Attach a PCI device to the Virtual Machine](#attach-a-pci-device-to-the-virtual-machine)
@@ -149,6 +151,7 @@ If you want to monitor the download you can click the downward facing arrow on t
 To upload the ISO image from your local machine, you can open another tab on your web browser and navigate to the File Transfer portal endpoint found at the output of the setup script. The File Transfel portal should look like the following image and you can log in with these credentials:
 
 Username: `admin`
+
 Password: `admin`
 
 ![file-transfer-portal-login-page](/images/file-transfer-portal-login-page.png)
