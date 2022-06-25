@@ -108,27 +108,31 @@ We need to install several packages to make the Rescue Mode environment ready fo
 sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y curl ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
 ```
 
-The script should only take less than a minute to complete depending on the speed of the system and package downloads. If it completed successfully, you should see the following webserver output:
+The script should only take less than a minute to complete depending on the speed of the system and package downloads. If it completed successfully, you should see the following output with the environment endpoints:
 
 ![script-completed](/images/script-completed.png)
 
 ### Access the ISO installation environment
 
-The simplest way to access the server is by pointing your local web browser to the public IPv4 address of the Equinix Metal instance. The web browser should show this page:
+The simplest way to access the environment is by pointing your web browser to the public IPv4 address of the Equinix Metal instance which is found on the output of the setup script. The web browser should show this page:
 
 ![novnc](/images/novnc.png)
 
-You can also use the VNC client of your choice and point it to the public IPv4 address of the Equinix Metal instance.
+You can also use a VNC client of your choice and point it to the public IPv4 address of the Equinix Metal instance.
 
-In both cases, you will be prompted to connect and enter a password which will be `alpine`.
+In both cases, you will be prompted to connect and enter a password which will be `admin`.
 
-Once you have logged in, you will see the desktop UI. You may get a prompt about the Power Manager Plugin but you can just close the window by clicking the `X` button on the top right corner of the prompt.
+Once you have logged in, you will see the desktop UI. You may get a prompt about the Power Manager Plugin but you can just close the window by clicking the `X` button on the top right corner of the prompt. You might also see a notification about the Ethernet network being disconnected but you can ignore it.
 
 ![desktop](/images/desktop.png)
 
-### Download the ISO
+### Get the ISO
 
-We need to download the ISO first which will be Windows 10 for this guide. To do so, you can launch the Firefox web browser by clicking the browser icon on the dock at the bottom of the screen.
+We need to get the ISO file first which will be Windows 10 for this guide. You have the option to either download the ISO from the web or you can upload your own files from your local machine.
+
+#### Download the ISO
+
+To download the ISO image, you can launch the Firefox web browser by clicking the browser icon on the dock at the bottom of the screen. It may take several seconds for the browser to open for the first launch.
 
 ![launch-web-browser](/images/launch-web-browser.png)
 
@@ -140,9 +144,22 @@ If you want to monitor the download you can click the downward facing arrow on t
 
 ![iso-download](/images/iso-download.png)
 
+#### Upload the ISO
+
+To upload the ISO image from your local machine, you can open another tab on your web browser and navigate to the File Transfer portal endpoint found at the output of the setup script. The File Transfel portal should look like the following image and you can log in with these credentials:
+
+Username: `admin`
+Password: `admin`
+
+![file-transfer-portal-login-page](/images/file-transfer-portal-login-page.png)
+
+Once you have logged in to the file transfer portal, you will have access to the entire root user directory. You can navigate to the folder of your choice where you want to upload the ISO such as the `Downloads` folder. To upload the ISO, click the up arrow icon on the top right corner of the portal, select the file option and choose your ISO in the local file browser prompt.
+
+![file-transfer-portal-upload-file](/images/file-transfer-portal-upload-file.png)
+
 ### Create the ISO installation Virtual Machine
 
-Once you have downloaded your ISO, you need to create a Virtual Machine so that you can install the Operating System to the local server storage.
+Once you have the ISO ready, you need to create a Virtual Machine so that you can install the Operating System to the local server storage.
 
 Launch the Virtual Machine Manager by clicking the search icon on the dock at the bottom of the screen, then type `virtual machine manager` in the search field which should show the Virtual Machine Manager application as a search result. Double click on the application to start it.
 
