@@ -70,8 +70,6 @@ echo "The File Transfer portal is available at:"
 printf "\n"
 echo "http://$PUBLIC_IP:8080/"
 printf "\n"
-echo "The instance is running in "
-[ -d /sys/firmware/efi ] && echo UEFI || echo BIOS
-echo " boot mode."
+echo "The instance is running in $([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS) boot mode."
 printf "\n\n"
 
