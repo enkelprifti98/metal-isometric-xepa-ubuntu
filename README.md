@@ -424,7 +424,7 @@ At this point you're all set!
 
 In the case that you reboot over to the physical host and things such as the Out-of-Band console or remote access over the internet are not working, you can go back to the VM environment to troubleshoot.
 
-To do so, set the instance to always PXE boot by going to the "Actions" button on the top right and click "Set to always pxe boot". Click Actions again and click Reboot.
+To do so, set the instance to always PXE boot by going to the "Server Actions" button on the top right and click "Set to always pxe boot". Click Server Actions again and click Reboot.
 
 ![always-pxe-boot](/images/always-pxe-boot.png)
 
