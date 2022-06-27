@@ -424,7 +424,11 @@ At this point you're all set!
 
 In the case that you reboot over to the physical host and things such as the Out-of-Band console or remote access over the internet are not working, you can go back to the VM environment to troubleshoot.
 
-To do so, switch the server instance back to [Rescue Mode](#switch-the-instance-to-rescue-mode). Then [run the ISO installation environment setup script](#run-the-iso-installation-environment-setup-script) and [access the ISO installation environment](#access-the-iso-installation-environment) through your web browser or VNC client.
+To do so, set the instance to always PXE boot by going to the "Actions" button on the top right and click "Set to always pxe boot". Click Actions again and click Reboot.
+
+![always-pxe-boot](/images/always-pxe-boot.png)
+
+After the instance reboots, log in to the [Out-of-Band console](#log-in-to-the-instance). Then [run the ISO installation environment setup script](#run-the-iso-installation-environment-setup-script) and [access the ISO installation environment](#access-the-iso-installation-environment) through your web browser or VNC client.
 
 Once you're back in the rescue GUI environment, launch the Virtual Machine Manager by clicking the search icon on the dock at the bottom of the screen, then type `virtual machine manager` in the search field which should show the Virtual Machine Manager application as a search result. Double click on the application to start it.
 
