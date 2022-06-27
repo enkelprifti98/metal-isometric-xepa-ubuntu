@@ -73,7 +73,7 @@ At the Optional Settings section, there will be an option to add User Data. Enab
 dhcp
 imgfree
 set base_url https://github.com/netbootxyz/ubuntu-squash/releases/download/22.04-0eccaa7c/
-kernel ${base_url}vmlinuz initrd=initrd ip=dhcp boot=casper netboot=url url=${base_url}filesystem.squashfs intel_iommu=on iommu=pt pci=realloc console=ttyS1,115200n8
+kernel ${base_url}vmlinuz initrd=initrd ip=dhcp boot=casper netboot=url url=${base_url}filesystem.squashfs intel_iommu=on iommu=pt console=tty0 console=ttyS1,115200
 initrd ${base_url}initrd
 boot
 ```
