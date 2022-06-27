@@ -479,4 +479,4 @@ Once you have configured the VM settings you can click the `Begin Installation` 
   - [Serial console](#serial-console)
   - [Remote access](#remote-access)
 
-After you're done troubleshooting, you can [reboot back to the physical host](#rebooting-to-the-physical-host).
+After you're done troubleshooting, go to the Equinix Metal portal instance overview page. Click the "Server Actions" button on the top right and click "Disable always PXE boot". Then you can [reboot back to the physical host](#rebooting-to-the-physical-host).
