@@ -12,7 +12,7 @@ While you will be able to install any ISO, it is not guaranteed to work due to s
 
 ## How does it work?
 
-TLDR: Custom iPXE + live Linux OS + KVM hypervisor + IOMMU / VFIO PCI Passthrough + GUI + Web Browser
+TLDR: Custom iPXE + live Linux OS + KVM hypervisor + IOMMU / VFIO PCI Passthrough + GUI
 
 Equinix Metal provides the option of deploying instances with the Custom iPXE Operating System which is effectively a bare metal node with empty local storage drives.
 
@@ -108,7 +108,7 @@ sudo su
 
 ### Run the ISO installation environment setup script
 
-We need to install several packages to make the Rescue Mode environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
+We need to install several packages to make the live linux environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
 
 ```
 sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y curl ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
@@ -295,7 +295,7 @@ Once you have found it you will see 2 or 4 devices with the same name which repr
 0000:41:00:1 ... Ethernet Controller ... (interface eth1)
 ```
 
-**You cannot use the first device / interface eth0 as that is being used by the Rescue Mode environment for internet access. Therefore you need to choose any other interface so I will be using the second PCI device network card or interface eth1.**
+**You cannot use the first device / interface eth0 as that is being used by the live linux environment for internet access. Therefore you need to choose any other interface so I will be using the second PCI device network card or interface eth1.**
 
 ![virt-manager-pci-device](/images/virt-manager-pci-device.png)
 
@@ -450,7 +450,7 @@ To do so, set the instance to always PXE boot by going to the "Server Actions" b
 
 After the instance reboots, log in to the [Out-of-Band console](#log-in-to-the-instance). Then [run the ISO installation environment setup script](#run-the-iso-installation-environment-setup-script) and [access the ISO installation environment](#access-the-iso-installation-environment) through your web browser or VNC client.
 
-Once you're back in the rescue GUI environment, launch the Virtual Machine Manager by clicking the search icon on the dock at the bottom of the screen, then type `virtual machine manager` in the search field which should show the Virtual Machine Manager application as a search result. Double click on the application to start it.
+Once you're back in the GUI environment, launch the Virtual Machine Manager by clicking the search icon on the dock at the bottom of the screen, then type `virtual machine manager` in the search field which should show the Virtual Machine Manager application as a search result. Double click on the application to start it.
 
 ![launch-virt-manager](/images/launch-virt-manager.png)
 
