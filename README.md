@@ -234,6 +234,12 @@ On the last page, select the `Customize configuration before install` option and
 
 A new overview window will appear where you can see the different hardware components of the virtual machine.
 
+### Set Virtual Machine boot firmware
+
+The boot firmware of the virtual machine should match with your instance. Your instance boot mode is provided at the output of the setup script. On the VM overview page, under the firmware option, select BIOS or UEFI depending on your instance.
+
+![vm-boot-firmware](/images/vm-boot-firmware.png)
+
 ### Add serial consoles to the Virtual Machine
 
 We need to add 2 serial console devices to the Virtual Machine so that we can enable it later after installing the Operating System. This is needed to make the Equinix Metal Out-of-Band console work.
@@ -251,6 +257,16 @@ Repeat this process once again to add the second serial console device.
 You should see 2 serial devices on the VM overview sidebar once you have added them.
 
 ![virt-manager-add-serial-console-devices](/images/virt-manager-add-serial-console-devices.png)
+
+### Add TPM module to the Virtual Machine
+
+Some operating systems such as Microsoft's Windows 11 may require a TPM module to run. You can add an emulated TPM module to the virtual machine by clicking the `+ Add Hardware` button on the bottom left corner of the window.
+
+![virt-manager-add-hardware](/images/virt-manager-add-hardware.png)
+
+On the left sidebar select the `TPM` category. On the right side select the model as CRB, backend as Emulated device and Version as 2.0, then click the `Finish` button.
+
+![tpm-hardware](/images/tpm-hardware.png)
 
 ### Attach a PCI device to the Virtual Machine
 
