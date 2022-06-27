@@ -12,7 +12,7 @@ While you will be able to install any ISO, it is not guaranteed to work due to s
 
 ## How does it work?
 
-TLDR: Custom iPXE + Rescue mode / Alpine Linux + KVM hypervisor + IOMMU / VFIO PCI Passthrough + GUI + Web Browser
+TLDR: Custom iPXE + Live Linux OS + KVM hypervisor + IOMMU / VFIO PCI Passthrough + GUI + Web Browser
 
 Equinix Metal provides the option of deploying instances with the Custom iPXE Operating System which is effectively a bare metal node with empty local storage drives.
 
