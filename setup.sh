@@ -17,7 +17,7 @@ nohup /usr/bin/Xvfb :99 -screen 0 $RESOLUTION -ac +extension GLX +render -norese
 
 nohup startxfce4 > /dev/null 2>&1 &
 
-nohup x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :99 -forever -bg -rfbauth /root/.vnc/passwd -users root -rfbport 5900 > /dev/null 2>&1 &
+nohup x11vnc -xkb -noxrecord -noxfixes -noxdamage -display $DISPLAY -forever -bg -rfbauth /root/.vnc/passwd -users root -rfbport 5900 > /dev/null 2>&1 &
 
 # Install KVM hypervisor
 
