@@ -152,7 +152,7 @@ If you want to monitor the download you can click the downward facing arrow on t
 
 #### Upload the ISO
 
-To upload the ISO image from your local machine, you can open another tab on your web browser and navigate to the File Transfer portal endpoint found at the output of the setup script. The File Transfel portal should look like the following image and you can log in with these credentials:
+To upload the ISO image from your local machine, you can open another tab on your web browser and navigate to the File Transfer portal endpoint found at the output of the setup script. The File Transfer portal should look like the following image and you can log in with these credentials:
 
 Username: `admin`
 
