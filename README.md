@@ -1,4 +1,4 @@
-# metal-isometric-xepa
+# metal-isometric-xepa-ubuntu
 
 ISO installation environment for Equinix Metal
 
