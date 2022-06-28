@@ -111,7 +111,7 @@ sudo su
 We need to install several packages to make the live linux environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
 
 ```
-sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y curl ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa/main/setup.sh | sh
+sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y curl ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa-ubuntu/main/setup.sh | sh
 ```
 
 The script should only take less than a minute to complete depending on the speed of the system and package downloads. If it completed successfully, you should see the following output with the environment endpoints along with the boot mode the instance is running in, BIOS or UEFI.
