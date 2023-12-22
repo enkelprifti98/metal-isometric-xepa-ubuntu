@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Install XFCE GUI, VNC server, and other necessary packages
 
