@@ -2,7 +2,7 @@
 
 # Install XFCE GUI, VNC server, and other necessary packages
 
-apt update && apt install -y ca-certificates curl openssl sudo xvfb x11vnc xfce4 xfce4-terminal faenza-icon-theme bash procps nano git
+apt update && apt install -y ca-certificates curl openssl sudo xvfb x11vnc xfce4 xfce4-terminal faenza-icon-theme bash procps nano git ethtool
 
 # Set VNC password: ("admin" but you can set it to whatever)
 
