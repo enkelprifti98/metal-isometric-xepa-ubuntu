@@ -72,16 +72,6 @@ At the Optional Settings section, there will be an option to add User Data. Enab
 #!ipxe
 dhcp
 imgfree
-set base_url https://github.com/netbootxyz/ubuntu-squash/releases/download/22.04-0eccaa7c/
-kernel ${base_url}vmlinuz initrd=initrd ip=dhcp boot=casper netboot=url url=${base_url}filesystem.squashfs intel_iommu=on iommu=pt console=tty0 console=ttyS1,115200
-initrd ${base_url}initrd
-boot
-```
-
-```
-#!ipxe
-dhcp
-imgfree
 
 # pci=nocrs avoids BIOS tables and lets the kernel build its own which is needed for some m3.small.x86 systems based on Supermicro and ASRockRack Open19 with iGPU enabled and Intel E810 NIC. Otherwise the NIC will not work so DHCP fails and the boot fails. Other workarounds in BIOS are to enable MMIO over 4G or SR-IOV or disable the iGPU.
 
