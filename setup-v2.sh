@@ -99,7 +99,7 @@ fi
 # Install XFCE GUI, VNC server, and other necessary packages
 # The standard gtk+3.0 required package seems to fail, installing gtk+3.0-dev works so startxfce4 runs successfully.
 
-apt update && apt install -y ca-certificates curl openssl sudo xvfb x11vnc xfce4 xfce4-terminal faenza-icon-theme bash procps nano git ethtool
+apt update && apt install -y ca-certificates curl openssl sudo xvfb x11vnc xfce4 xfce4-terminal faenza-icon-theme bash procps nano git ethtool ifupdown
 
 #Xfce usually stores its configuration files in ~/.config/xfce4 (as well as ~/.local/share/xfce4 and ~/.config/Thunar).
 #Keyboard shortcuts are stored in ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml.
@@ -141,7 +141,7 @@ ifup lo
 # You can define other storage pool locations when creating a VM in virt-manager.
 # QEMU logs for each VM / Domain are stored in /var/log/libvirt/qemu  e.g. /var/log/libvirt/qemu/xepa.log which shows the /usr/bin/qemu-system-x86_64 command parameters.
 
-apt install -y qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager virt-install
+apt install -y qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager virtinst
 
 # Check Ubuntu version with cat /etc/*release*  and  cat /etc/issue
 # Check QEMU version with /usr/bin/qemu-system-x86_64 --version
