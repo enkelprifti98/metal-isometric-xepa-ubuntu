@@ -985,6 +985,8 @@ systemctl mask systemd-networkd.socket systemd-networkd \
 networkd-dispatcher systemd-networkd-wait-online
 apt-get --assume-yes purge nplan netplan.io
 
+ifdown -a --force
+
 ifup $MANAGEMENT_IF_NAME
 ifdown $MANAGEMENT_IF_NAME
 ifup $MANAGEMENT_IF_NAME
