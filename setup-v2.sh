@@ -1058,7 +1058,7 @@ if [ "\$XEPA_VM_STATE" != "shut off" ]; then
     virsh shutdown xepa
 
     # Wait up to 120 seconds for the xepa VM to gracefully shut down
-    echo "Waiting up to 60 seconds for the xepa VM to shut down gracefully"
+    echo "Waiting up to 120 seconds for the xepa VM to shut down gracefully"
     XEPA_VM_STATE=\$(virsh domstate xepa)
     SECONDS=1
     while [ "\$XEPA_VM_STATE" != "shut off" ] && [ \$SECONDS -lt 121 ]; do
