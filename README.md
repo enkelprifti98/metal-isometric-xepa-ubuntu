@@ -115,6 +115,14 @@ sudo su
 
 ### Run the ISO installation environment setup script
 
+Automated option:
+
+```
+sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y jq curl ; wget -q -O setup-v2.sh https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa-ubuntu/main/setup-v2.sh && chmod +x setup-v2.sh && ./setup-v2.sh
+```
+
+Manual option:
+
 We need to install several packages to make the live linux environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
 
 ```
