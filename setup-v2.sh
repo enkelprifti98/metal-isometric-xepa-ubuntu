@@ -962,6 +962,9 @@ iface $MANAGEMENT_IF_NAME inet static
     netmask $NETMASK
 EOF
 
+ip addr del $ETH0_PUBLIC_IPV4 dev $ETH0_IF_NAME
+ifdown -a --force
+
 ifup $MANAGEMENT_IF_NAME
 
 ip route del default
