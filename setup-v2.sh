@@ -979,6 +979,8 @@ sudo systemctl disable NetworkManager-dispatcher.service
 sudo systemctl stop network-manager.service
 sudo systemctl disable network-manager.service
 
+systemctl mask NetworkManager.service NetworkManager-wait-online.service NetworkManager-dispatcher.service network-manager.service
+
 sudo apt-get --assume-yes purge network-manager
 
 
