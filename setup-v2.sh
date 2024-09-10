@@ -820,6 +820,7 @@ echo "PROJECT ID: $PROJECT_UUID"
                 IP_UUID=$(echo $ELASTIC_IP_CHECK_IF_EXISTS | jq -r .id)
                 SERVER_IP=$(echo $ELASTIC_IP_CHECK_IF_EXISTS | jq -r .address)
                 NETMASK=$(echo $ELASTIC_IP_CHECK_IF_EXISTS | jq -r .netmask)
+                CIDR=$(echo $ELASTIC_IP_CHECK_IF_EXISTS | jq -r .cidr)
                 GATEWAY=$(echo $ELASTIC_IP_CHECK_IF_EXISTS | jq -r .gateway)
                 ELASTIC_IP_BLOCK_CREATED=true
                 echo "Done..."
@@ -963,26 +964,8 @@ iface $MANAGEMENT_IF_NAME inet static
     netmask $NETMASK
 EOF
 
-#ip addr del $ETH0_PUBLIC_IPV4/$ETH0_PUBLIC_IPV4_CIDR dev $ETH0_IF_NAME
-#ip link set $ETH0_IF_NAME down
-#ip link set $MANAGEMENT_IF_NAME down
-#ip link set lo down
 
-#ip addr flush dev $ETH0_IF_NAME
-#ip addr flush dev $MANAGEMENT_IF_NAME
-#ip link set $MANAGEMENT_IF_NAME down
-
-#ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
-
-#ip link set lo up
-#ip link set $MANAGEMENT_IF_NAME up
-
-#ifdown -a --force
-
-#service networking start
-#systemctl unmask networking
-#systemctl enable networking
-#systemctl restart networking
+# Disable NetworkManager
 
 sudo systemctl stop NetworkManager.service
 sudo systemctl disable NetworkManager.service
@@ -998,6 +981,9 @@ sudo systemctl disable network-manager.service
 
 sudo apt-get --assume-yes purge network-manager
 
+
+# Disable networkd and netplan
+
 systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
 
 systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
@@ -1006,28 +992,44 @@ systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher syst
 
 apt-get --assume-yes purge nplan netplan.io
 
-#ifdown -a --force
 
-#ifup lo
 
-#ifup $MANAGEMENT_IF_NAME
-#ifdown $MANAGEMENT_IF_NAME
-#ifup $MANAGEMENT_IF_NAME
+#ip addr del $ETH0_PUBLIC_IPV4/$ETH0_PUBLIC_IPV4_CIDR dev $ETH0_IF_NAME
+#ip link set $ETH0_IF_NAME down
+#ip link set $MANAGEMENT_IF_NAME down
+#ip link set lo down
 
-ip link set $ETH0_IF_NAME down
-ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
-ip link set $MANAGEMENT_IF_NAME up
+#ip addr flush dev $ETH0_IF_NAME
+#ip addr flush dev $MANAGEMENT_IF_NAME
+#ip link set $MANAGEMENT_IF_NAME down
+
+#ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
+
+#ip link set lo up
+#ip link set $MANAGEMENT_IF_NAME up
+
+ifdown -a --force
+
+#service networking start
+systemctl unmask networking
+systemctl enable networking
+systemctl restart networking
+
+ifup -a
+
+ifup lo
+
+ifdown $ETH0_IF_NAME
+
+ifup $MANAGEMENT_IF_NAME
+
+#ip link set $ETH0_IF_NAME down
+#ip address add $SERVER_IP/$CIDR dev $MANAGEMENT_IF_NAME
+#ip link set $MANAGEMENT_IF_NAME up
 
 ip route del default
 ip route add default via $GATEWAY
 
-# this is needed to make ifup sync with the current interface state otherwise ifdown won't work
-#ifup $ETH0_IF_NAME
-
-# ifdown eth0 doesn't work when eth0 isn't defined in /etc/network/interfaces
-#ifdown $ETH0_IF_NAME
-
-#ip link set $ETH0_IF_NAME down
 
 
 cat > /root/cleanup.sh <<EOF
