@@ -968,7 +968,7 @@ ip link set $ETH0_IF_NAME down
 ip link set $MANAGEMENT_IF_NAME down
 ip link set lo down
 
-#ifdown -a --force
+ifdown -a --force
 
 #service networking start
 systemctl unmask networking
