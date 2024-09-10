@@ -206,10 +206,10 @@ Version=1.0
 Encoding=UTF-8
 Type=X-XFCE-Helper
 X-XFCE-Category=WebBrowser
-X-XFCE-CommandsWithParameter=firefox-esr "%s"
+X-XFCE-CommandsWithParameter=firefox "%s"
 Icon=firefox-esr
 Name=firefox-esr
-X-XFCE-Commands=firefox-esr
+X-XFCE-Commands=firefox
 EOF
 
 # Install NoVNC (VNC client over http)
