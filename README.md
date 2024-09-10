@@ -38,6 +38,8 @@ Profit???
   - [Download the ISO](#download-the-iso)
   - [Upload the ISO](#upload-the-iso)
 - [Create the ISO installation Virtual Machine](#create-the-iso-installation-virtual-machine)
+  - [Automated Instructions](#automated-instructions)
+  - [Manual Instructions](#manual-instructions)
 - [Set Virtual Machine boot firmware](#set-virtual-machine-boot-firmware)
 - [Add serial consoles to the Virtual Machine](#add-serial-consoles-to-the-virtual-machine)
 - [Add a TPM to the Virtual Machine](#add-a-tpm-to-the-virtual-machine)
@@ -115,15 +117,21 @@ sudo su
 
 ### Run the ISO installation environment setup script
 
-Automated option:
+We need to install several packages to make the Rescue Mode environment ready for installing an ISO to the server. There are two options for this, automated (recommended) and manual.
+
+#### Automated (recommended) (API key required)
+
+The automated option provides the best experience as it eliminates a lot of steps and creates a Virtual Machine called XEPA that looks very similar to the physical host as it shares the same SMBIOS information and has the necessary PCI devices attached such as local storage and the management network interface (eth0). This means that the VM will be using the host's actual management Layer 3 Public IPv4 network for connectivity.
+
+However, an API key is required which you can generate by following the instructions [here](https://deploy.equinix.com/developers/docs/metal/identity-access-management/api-keys/). Once you have your API key ready, you can run the following command to run the setup script:
 
 ```
 sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y jq curl ; wget -q -O setup-v2.sh https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa-ubuntu/main/setup-v2.sh && chmod +x setup-v2.sh && clear && ./setup-v2.sh
 ```
 
-Manual option:
+#### Manual (no API key required)
 
-We need to install several packages to make the live linux environment ready for installing an ISO to the server. To do so, run the following command to run the setup script:
+The manual option does not require an API key and is useful for legacy systems that don't support IOMMU / PCI passthrough but it takes more steps. You can run the following command to run the setup script:
 
 ```
 sed -i "s/#DNS=/DNS=147.75.207.207 147.75.207.208/" /etc/systemd/resolved.conf ; systemctl restart systemd-resolved ; apt update && apt install -y jq curl ; curl -s https://raw.githubusercontent.com/enkelprifti98/metal-isometric-xepa-ubuntu/main/setup.sh | bash
@@ -186,6 +194,30 @@ Once you have the ISO ready, you need to create a Virtual Machine so that you ca
 Launch the Virtual Machine Manager by clicking the search icon on the dock at the bottom of the screen, then type `virtual machine manager` in the search field which should show the Virtual Machine Manager application as a search result. Double click on the application to start it.
 
 ![launch-virt-manager](/images/launch-virt-manager.png)
+
+#### Automated Instructions
+
+The Virtual Machine Manager application will look like the following image where you will notice there is a Virtual Machine called `xepa`. Open the xepa VM by double clicking on it, then click on the upper left `i` icon to show virtual hardware details.
+
+![virt-manager-open-xepa-vm](/images/virt-manager-open-xepa-vm.png)
+
+On the left sidebar of the virtual hardware details page click on `SATA CDROM 1`, then click `Browse` on the right side. On the new window click `Browse Local` to locate your ISO file.
+
+![virt-manager-xepa-vm-add-iso](/images/virt-manager-xepa-vm-add-iso.png)
+
+A new window will appear to locate the ISO file. Go to the Downloads folder or anywhere else that your ISO file might be located in and select it as the ISO media by double clicking the ISO file or click the `Open` button. Then click `Apply` to save the ISO media to the SATA CDROM.
+
+![find-downloads-folder](/images/find-downloads-folder.png)
+
+![select-iso-file](/images/select-iso-file.png)
+
+Once your ISO is added to the VM SATA CDROM, you can start up the VM by clicking on the the left corner monitor icon to show the graphical video console and click on the play icon to power on the virtual machine. It may take a few seconds for the VM to power on.
+
+![virt-manager-start-xepa-vm](/images/virt-manager-start-xepa-vm.png)
+
+The VM should start booting from the ISO image and you can proceed with the rest of the [Operating System installation](#install-the-operating-system).
+
+#### Manual Instructions
 
 The Virtual Machine Manager application will look like the following image. Start the process of creating a Virtual Machine by clicking the monitor icon at the top left corner of the Virtual Machine Manager window.
 
@@ -398,6 +430,8 @@ comconsole_speed="115200"
 console="comconsole,vidconsole"
 comconsole_port=0x2F8
 ```
+
+In some cases the settings you set in `/boot/loader.conf` file can get changed/overwritten by the OS so it might be better to use `/boot/loader.conf.local` instead. The file might not exist by default so you can just create it.
 
 Restart the virtual machine after you have configured the serial console settings inside the operating system for them to take effect.
 
