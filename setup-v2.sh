@@ -965,6 +965,11 @@ EOF
 ip addr del $ETH0_PUBLIC_IPV4 dev $ETH0_IF_NAME
 ifdown -a --force
 
+#service networking start
+systemctl unmask networking
+systemctl enable networking
+systemctl restart networking
+
 ifup $MANAGEMENT_IF_NAME
 
 ip route del default
