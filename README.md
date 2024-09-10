@@ -91,7 +91,7 @@ boot
 
 There will also be an option to configure IPs. If you leave the toggle unchecked, the instance will be deployed with a /31 public IPv4 subnet, /31 private IPv4 subnet, and a /127 public IPv6 subnet.
 
-**For many operating systems a /31 subnet size will work fine but there are cases where a /30 subnet is required at minimum such as for Microsoft Windows or VMware ESXi. If that is the case, you will need to [request a /30 Elastic IP subnet](https://metal.equinix.com/developers/docs/networking/reserve-public-ipv4s/#requesting-public-ipv4-addresses) and then use that subnet as the [instance management subnet](https://metal.equinix.com/developers/docs/networking/reserve-public-ipv4s/#provisioning-with-a-reserved-public-ipv4-subnet).**
+**For many operating systems a /31 subnet size will work fine but there are cases where a /30 subnet is required at minimum such as for Microsoft Windows, VMware ESXi, TrueNAS, and pfSense. If that is the case, you will need to [request a /30 Elastic IP subnet](https://deploy.equinix.com/developers/docs/metal/networking/reserve-public-ipv4s/#requesting-public-ipv4-addresses) and then use that subnet as the [instance management subnet](https://deploy.equinix.com/developers/docs/metal/networking/reserve-public-ipv4s/#provisioning-with-a-reserved-public-ipv4-subnet).**
 
 For this guide I will be installing Windows 10 so I will be using a /30 Elastic IP subnet for the instance management subnet. Here is what it would look like:
 
@@ -101,11 +101,11 @@ Confirm your settings and click the `Deploy Now` button to start provisioning yo
 
 ### Log in to the instance
 
-Once the Equinix Metal instance has completed provisioning, click on it so that you can view the server's overview page. On this page you will be able to see additional information such as the management subnets. We need to log in to the [Out-of-Band console](https://metal.equinix.com/developers/docs/resilience-recovery/serial-over-ssh/#using-sos) via SSH. You can get the Out-of-Band console SSH command through the button on the top of the instance overview page.
+Once the Equinix Metal instance has completed provisioning, click on it so that you can view the server's overview page. On this page you will be able to see additional information such as the management subnets. We need to log in to the [Out-of-Band console](https://deploy.equinix.com/developers/docs/metal/resilience-recovery/serial-over-ssh/) via SSH. You can get the Out-of-Band console SSH command through the button on the top of the instance overview page.
 
 ![out-of-band-console-button](/images/out-of-band-console-button.png)
 
-Copy the command and run it on your local machine so that you can connect to the instance. Note that it is required to have a [public SSH key](https://metal.equinix.com/developers/docs/accounts/ssh-keys/) added to your Equinix Metal account to be able to log in to the Out-of-Band console. Once you have logged in to the console, you should get a user login prompt similar to the following image. Type `ubuntu` and press `Enter` to log in to the shell.
+Copy the command and run it on your local machine so that you can connect to the instance. Note that it is required to have a [public SSH key](https://deploy.equinix.com/developers/docs/metal/identity-access-management/ssh-keys/) added to your Equinix Metal account to be able to log in to the Out-of-Band console. Once you have logged in to the console, you should get a user login prompt similar to the following image. Type `ubuntu` and press `Enter` to log in to the shell.
 
 ![out-of-band-console](/images/out-of-band-console.png)
 
@@ -463,29 +463,55 @@ For other operating systems, you need to install or enable the SSH server.
 
 ### Rebooting to the physical host
 
-Once we have completed the post installation steps, we can reboot over to the physical host.
+Once we have completed the post installation steps, we can prepare to reboot over to the physical host.
 
-Shut down the virtual machine and close all running applications. Then disconnect from the VNC console or close the web browser window.
+First shut down the virtual machine either through an option in the Operating System or use the `Shut Down` button of virtual machine manager. If the shutdown option doesn't work, use the `Force Off` option under the downard pointing arrow icon.
+
+Then close all running applications. Disconnect from the VNC console or close the web browser window.
+
+You can now reboot to the host by going to the server's Out-of-Band console and type `reboot`, then press `Enter`.
+
+NOTE: Do not use the reboot function on the Equinix Metal portal as it sends a hard reset instead of a graceful shutfown signal so the automated cleanup process that runs during Rescue OS shutdown will not work.
+
+<!---
+Rebooting via the portal sends a hard reset instead of a graceful shutfown signal so the automated cleanup process will not work.
 
 Go to the Equinix Metal console server overview page, click the `Server Actions` button and select the `Reboot` action.
 
 ![post-install-reboot-server](/images/post-install-reboot-server.png)
 
 While the server is rebooting, you can monitor its progress through the [Out-of-Band console](https://metal.equinix.com/developers/docs/resilience-recovery/serial-over-ssh/#using-sos).
+-->
+
+You will notice the server will be trying to PXE boot over the network initially and loop through each network interface but it should eventually get to the OS boot drive. You can usually press `Escape` on your keyboard to cancel the PXE boot process. If it doesn't find the OS boot drive, it means that either the VM firmware did not match with the server (BIOS vs UEFI) or the OS was installed on an NVMe drive in a BIOS server which do not support booting an OS from NVMe drives, only UEFI servers can support NVMe drives as boot targets.
 
 If there are any kernel panics during the OS boot process, it may potentially mean that your hardware is not supported by the kernel.
 
-If you see any storage drive missing or filesystem mounting related errors during the OS boot process, it could potentially mean that the Operating System does not detect the underlying storage drives / controller. Try installing the OS in a different drive type under a different HBA / storage controller. For troubleshooting, you could also [attach the PCI storage controller](#attach-a-pci-device-to-the-virtual-machine) to the VM inside the ISO installation environment to verify if the OS can detect the drives or not.
+If you see any storage drive missing or filesystem mounting related errors during the OS boot process, it could potentially mean that the Operating System does not support or detect the underlying storage drives / controller. It could also mean that the OS boot configuration is set up by using disk or filesystem UUIDs which will differ when passing the server drives as virtual storage. Try installing the OS in a different drive type under a different HBA / storage controller. You can also [attach the PCI storage controller](#attach-a-pci-device-to-the-virtual-machine) to the VM inside the ISO installation environment to install the OS directly through the storage controller and verify if the OS can detect the drives or not.
+
+While the server is booting into the OS, you should see logs appearing in the Out-of-Band console if the OS supports serial console output and was configured properly as shown [here](#serial-console).
 
 Once the server has rebooted succesfully, you should be able to access it via RDP / SSH through its IP address or the Out-of-Band console.
 
 ![windows-rdp-session](/images/windows-rdp-session.png)
 
-In many cases the operating system will automatically configure the network through DHCP for the first network interface only. It's recommended to configure LACP bonding for the server's network interfaces if the operating system supports it. If you need to configure the network interfaces statically, the management subnet information can be found in the Equinix Metal portal instance overview page and for DNS servers you can use the following:
+NOTE:
+
+In many cases the operating system will automatically configure the network through DHCP for the first network interface only. It's recommended to configure a link aggregation group (LAG) with LACP (802.3ad) bonding for the server's network interfaces to achieve network redundancy if the operating system supports it. Otherwise you will experience downtime during network maintenance events performed by Equinix.
+
+These are the recommended LAG LACP settings:
 
 ```
-Primary   DNS Server: 147.75.207.207
-Secondary DNS Server: 147.75.207.208
+Mode:  Active - Active
+Timeout:  Fast
+Hash policy:  Layer 3+4
+```
+
+If you need to configure the network interfaces statically, the management subnet information can be found in the Equinix Metal portal instance overview page and for DNS servers you can use the following provided by Equinix Metal or any others that you may prefer:
+
+```
+Primary   DNS Server:  147.75.207.207
+Secondary DNS Server:  147.75.207.208
 ```
 
 At this point you're all set!
