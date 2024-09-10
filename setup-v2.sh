@@ -964,18 +964,18 @@ iface $MANAGEMENT_IF_NAME inet static
 EOF
 
 #ip addr del $ETH0_PUBLIC_IPV4/$ETH0_PUBLIC_IPV4_CIDR dev $ETH0_IF_NAME
-ip link set $ETH0_IF_NAME down
+#ip link set $ETH0_IF_NAME down
 #ip link set $MANAGEMENT_IF_NAME down
 #ip link set lo down
 
 #ip addr flush dev $ETH0_IF_NAME
-ip addr flush dev $MANAGEMENT_IF_NAME
-ip link set $MANAGEMENT_IF_NAME down
+#ip addr flush dev $MANAGEMENT_IF_NAME
+#ip link set $MANAGEMENT_IF_NAME down
 
-ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
+#ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
 
 #ip link set lo up
-ip link set $MANAGEMENT_IF_NAME up
+#ip link set $MANAGEMENT_IF_NAME up
 
 #ifdown -a --force
 
@@ -984,13 +984,27 @@ ip link set $MANAGEMENT_IF_NAME up
 #systemctl enable networking
 #systemctl restart networking
 
-#systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+sudo systemctl stop NetworkManager.service
+sudo systemctl disable NetworkManager.service
 
-#systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+sudo systemctl stop NetworkManager-wait-online.service
+sudo systemctl disable NetworkManager-wait-online.service
 
-#systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+sudo systemctl stop NetworkManager-dispatcher.service
+sudo systemctl disable NetworkManager-dispatcher.service
 
-#apt-get --assume-yes purge nplan netplan.io
+sudo systemctl stop network-manager.service
+sudo systemctl disable network-manager.service
+
+sudo apt-get purge network-manager
+
+systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+
+systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+
+systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+
+apt-get --assume-yes purge nplan netplan.io
 
 #ifdown -a --force
 
@@ -999,6 +1013,10 @@ ip link set $MANAGEMENT_IF_NAME up
 #ifup $MANAGEMENT_IF_NAME
 #ifdown $MANAGEMENT_IF_NAME
 #ifup $MANAGEMENT_IF_NAME
+
+ip link set $ETH0_IF_NAME down
+ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
+ip link set $MANAGEMENT_IF_NAME up
 
 ip route del default
 ip route add default via $GATEWAY
