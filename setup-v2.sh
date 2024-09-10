@@ -968,6 +968,9 @@ ip link set $ETH0_IF_NAME down
 ip link set $MANAGEMENT_IF_NAME down
 ip link set lo down
 
+ip addr flush dev $ETH0_IF_NAME
+ip addr flush dev $MANAGEMENT_IF_NAME
+
 ifdown -a --force
 
 #service networking start
@@ -990,7 +993,7 @@ ifdown -a --force
 ifup lo
 
 ifup $MANAGEMENT_IF_NAME
-ifdown $MANAGEMENT_IF_NAME --force
+ifdown $MANAGEMENT_IF_NAME
 ifup $MANAGEMENT_IF_NAME
 
 ip route del default
