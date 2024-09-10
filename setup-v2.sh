@@ -994,14 +994,12 @@ apt-get --assume-yes purge nplan netplan.io
 
 
 
-#ip addr del $ETH0_PUBLIC_IPV4/$ETH0_PUBLIC_IPV4_CIDR dev $ETH0_IF_NAME
-#ip link set $ETH0_IF_NAME down
-#ip link set $MANAGEMENT_IF_NAME down
-#ip link set lo down
-
-#ip addr flush dev $ETH0_IF_NAME
-#ip addr flush dev $MANAGEMENT_IF_NAME
-#ip link set $MANAGEMENT_IF_NAME down
+ip addr del $ETH0_PUBLIC_IPV4/$ETH0_PUBLIC_IPV4_CIDR dev $ETH0_IF_NAME
+ip addr flush dev $ETH0_IF_NAME
+ip addr flush dev $MANAGEMENT_IF_NAME
+ip link set $ETH0_IF_NAME down
+ip link set $MANAGEMENT_IF_NAME down
+ip link set lo down
 
 #ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
 
