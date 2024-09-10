@@ -990,7 +990,7 @@ ifdown -a --force
 ifup lo
 
 ifup $MANAGEMENT_IF_NAME
-ifdown $MANAGEMENT_IF_NAME
+ifdown $MANAGEMENT_IF_NAME --force
 ifup $MANAGEMENT_IF_NAME
 
 ip route del default
