@@ -971,39 +971,42 @@ ip link set lo down
 ip addr flush dev $ETH0_IF_NAME
 ip addr flush dev $MANAGEMENT_IF_NAME
 
-ifdown -a --force
+ip address add $SERVER_IP/29 dev $MANAGEMENT_IF_NAME
+
+ip link set lo up
+ip link set $MANAGEMENT_IF_NAME up
+
+#ifdown -a --force
 
 #service networking start
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
+#systemctl unmask networking
+#systemctl enable networking
+#systemctl restart networking
 
-systemctl stop systemd-networkd.socket systemd-networkd \
-networkd-dispatcher systemd-networkd-wait-online
+#systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
 
-systemctl disable systemd-networkd.socket systemd-networkd \
-networkd-dispatcher systemd-networkd-wait-online
+#systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
 
-systemctl mask systemd-networkd.socket systemd-networkd \
-networkd-dispatcher systemd-networkd-wait-online
-apt-get --assume-yes purge nplan netplan.io
+#systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
 
-ifdown -a --force
+#apt-get --assume-yes purge nplan netplan.io
 
-ifup lo
+#ifdown -a --force
 
-ifup $MANAGEMENT_IF_NAME
-ifdown $MANAGEMENT_IF_NAME
-ifup $MANAGEMENT_IF_NAME
+#ifup lo
+
+#ifup $MANAGEMENT_IF_NAME
+#ifdown $MANAGEMENT_IF_NAME
+#ifup $MANAGEMENT_IF_NAME
 
 ip route del default
 ip route add default via $GATEWAY
 
 # this is needed to make ifup sync with the current interface state otherwise ifdown won't work
-ifup $ETH0_IF_NAME
+#ifup $ETH0_IF_NAME
 
 # ifdown eth0 doesn't work when eth0 isn't defined in /etc/network/interfaces
-ifdown $ETH0_IF_NAME
+#ifdown $ETH0_IF_NAME
 
 #ip link set $ETH0_IF_NAME down
 
