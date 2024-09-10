@@ -987,6 +987,8 @@ apt-get --assume-yes purge nplan netplan.io
 
 ifdown -a --force
 
+ifup lo
+
 ifup $MANAGEMENT_IF_NAME
 ifdown $MANAGEMENT_IF_NAME
 ifup $MANAGEMENT_IF_NAME
