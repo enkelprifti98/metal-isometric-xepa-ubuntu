@@ -247,6 +247,7 @@ clear
 
 ETH0_PUBLIC_IPV4=$(echo $METADATA | jq -r ".network.addresses[] | select(.public == true) | select(.address_family == 4) | .address")
 ETH0_PUBLIC_IPV4_NETMASK=$(echo $METADATA | jq -r ".network.addresses[] | select(.public == true) | select(.address_family == 4) | .netmask")
+ETH0_PUBLIC_IPV4_CIDR=$(echo $METADATA | jq -r ".network.addresses[] | select(.public == true) | select(.address_family == 4) | .cidr")
 ETH0_PUBLIC_IPV4_GATEWAY=$(echo $METADATA | jq -r ".network.addresses[] | select(.public == true) | select(.address_family == 4) | .gateway")
 
 INSTANCE_ID=$(echo $METADATA | jq -r .id)
@@ -962,8 +963,12 @@ iface $MANAGEMENT_IF_NAME inet static
     netmask $NETMASK
 EOF
 
-ip addr del $ETH0_PUBLIC_IPV4 dev $ETH0_IF_NAME
-ifdown -a --force
+ip addr del $ETH0_PUBLIC_IPV4/$ETH0_PUBLIC_IPV4_CIDR dev $ETH0_IF_NAME
+ip link set $ETH0_IF_NAME down
+ip link set $MANAGEMENT_IF_NAME down
+ip link set lo down
+
+#ifdown -a --force
 
 #service networking start
 systemctl unmask networking
