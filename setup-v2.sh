@@ -1245,9 +1245,25 @@ chmod +x /root/cleanup.sh
 # For manual testing you can start/stop the local service with: rc-service local start  and  rc-service local stop
 # This is useful so that when the user runs reboot it will automatically cleanup API objects
 
-cp /root/cleanup.sh /etc/local.d/cleanup.sh.stop
-rc-update add local
-rc-service local start
+cat > /etc/systemd/system/xepa.service <<EOF
+[Unit]
+Description=xepa
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecStop=/root/cleanup.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+systemctl daemon-reload
+systemctl enable xepa.service --now
+
 
 cat /root/pci-device-info
 
