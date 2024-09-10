@@ -1248,16 +1248,17 @@ chmod +x /root/cleanup.sh
 cat > /etc/systemd/system/xepa.service <<EOF
 [Unit]
 Description=xepa
-After=network.target
+After=graphical.target
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+TimeoutSec=360
 ExecStart=/bin/true
 ExecStop=/root/cleanup.sh
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical.target
 EOF
 
 
