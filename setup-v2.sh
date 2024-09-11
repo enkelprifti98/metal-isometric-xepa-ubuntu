@@ -1249,6 +1249,8 @@ chmod +x /root/cleanup.sh
 # systemctl list-dependencies graphical.target
 # systemctl list-dependencies multi-user.target
 # systemd-analyze critical-chain
+# After=network.target  (the script would run further in the shutdown process but network connectivity is guaranteed)
+# After=graphical.target  (the script runs the earliest in the shutdown process)
 
 cat > /etc/systemd/system/xepa.service <<EOF
 [Unit]
