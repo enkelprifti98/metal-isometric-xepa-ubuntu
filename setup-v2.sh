@@ -1238,12 +1238,17 @@ EOF
 
 chmod +x /root/cleanup.sh
 
-# Adding scripts in /etc/local.d ending with .start or .stop makes them run on startup or shutdown when the local service starts or stops
-# The scripts must be executable: chmod +x script.stop
-# The local service must be started for .stop scripts to run when the local service stops on reboot
-# You can check the local service status with: rc-service local status
-# For manual testing you can start/stop the local service with: rc-service local start  and  rc-service local stop
+# Creating a systemd service in /etc/systemd/system to run cleanup script on shutdown
+# The scripts must be executable: chmod +x script.sh
+# You can check the service status with: systemctl status xepa.service
+# For manual testing you can start/stop the service with: systemctl start xepa.service  and  systemctl stop xepa.service
 # This is useful so that when the user runs reboot it will automatically cleanup API objects
+# Additional commands to see the systemd hierarchy:
+# systemctl get-default
+# systemctl list-dependencies
+# systemctl list-dependencies graphical.target
+# systemctl list-dependencies multi-user.target
+# systemd-analyze critical-chain
 
 cat > /etc/systemd/system/xepa.service <<EOF
 [Unit]
